@@ -22,6 +22,7 @@ const metricsMiddleware = promBundle({
         }
     }
 });
+
 // add the prometheus middleware to all routes
 app.use(metricsMiddleware)
 
@@ -35,12 +36,8 @@ app.get("/", (req, res) => res.json({
 
 // hello world rest endpoint
 app.get("/hello", async (req, res) => {
-    if (typeof process._getActiveRequests !== 'function') {
-        return;
-    }
     requestCounter.inc({ api: 'hello' });
-    //await delay(2000);
-    res.json({ hello: "world", active_req: process._getActiveRequests().length });
+    res.json({ hello: "world"});
 });
 
 app.post("/bye", (req, res) => {
@@ -51,12 +48,3 @@ app.post("/bye", (req, res) => {
 app.listen(8080, function () {
     console.log('Listening at http://localhost:8080');
 });
-
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-}
-
-async function run() {
-    await delay(1000);
-}
-
